@@ -40,21 +40,21 @@ struct Home: View {
                 }
                 
                 Button("OK") {
-                    bubbleSort()
+                    bubbleSortStep()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
             .navigationTitle("Swift Charts")
             
-            .onChange(of: currentTab) { newValue in
-                sampleAnalytics = sample_analytics
-                animateGraph(fromChange: true)
-            }
             .onChange(of: sortCount) { newValue in
                 print("sortCount changed: \(newValue)")
+                print("変化前の値: \(sample_demo_analytics)")
+                
+                sampleAnalytics = sample_demo_analytics
+//                animateGraph(fromChange: true)
                 print("変化した値: \(sampleAnalytics)")
-                animateGraph(fromChange: true)
+                
             }
         }
         .onAppear {
@@ -125,27 +125,27 @@ struct Home: View {
         }
     }
     
-    // MARK: Bubble Sort with Animation
-    func bubbleSort() {
-        if sortCount == maxSortCount {
+    // MARK: Bubble Sort Step with Animation
+    func bubbleSortStep() {
+        if sortCount >= maxSortCount {
             return
         }
-        print(sampleAnalytics)
-        print("こんにちは")
+        sample_demo_analytics = sampleAnalytics
+        print("🥚🪺🍓")
         // 内部ループの実装
-        // ループ範囲を n-i-1 とすることで、最終比較対象が減少する
-        for j in 0..<maxSortCount-sortCount-1 {
-            if sampleAnalytics[j].views > sampleAnalytics[j+1].views {
+        for sortIndex in 0 ..< maxSortCount - sortCount - 1 {
+            if sample_demo_analytics[sortIndex].views > sample_demo_analytics[sortIndex + 1].views {
                 withAnimation(.easeInOut) {
+                    print("🍓🍓")
                     // 要素の交換
-                    let temp = sampleAnalytics[j]
-                    sampleAnalytics[j] = sampleAnalytics[j+1]
-                    sampleAnalytics[j+1] = temp
+                    let temp = sample_demo_analytics[sortIndex]
+                    sample_demo_analytics[sortIndex] = sample_demo_analytics[sortIndex + 1]
+                    sample_demo_analytics[sortIndex + 1] = temp
                 }
             }
         }
-        print(sampleAnalytics)
         sortCount += 1
+        print(sampleAnalytics)
     }
 }
 
