@@ -13,6 +13,7 @@ struct Home: View {
     @State var plotWidth: CGFloat = 0
     @State var sortCount: Int = 0
     @State var maxSortCount: Int = 0
+    @State var sampleDemoAnalytics: [SiteView] = []
     
     var body: some View {
         NavigationStack {
@@ -49,16 +50,17 @@ struct Home: View {
             
             .onChange(of: sortCount) { newValue in
                 print("sortCount changed: \(newValue)")
-                print("変化前の値: \(sample_demo_analytics)")
+                print("変化前の値: \(sampleDemoAnalytics)")
+                sampleAnalytics = sampleDemoAnalytics
+                animateGraph(fromChange: true)
                 
-                sampleAnalytics = sample_demo_analytics
-//                animateGraph(fromChange: true)
                 print("変化した値: \(sampleAnalytics)")
                 
             }
         }
         .onAppear {
             self.maxSortCount = sampleAnalytics.count
+            self.sampleDemoAnalytics = sampleAnalytics // 初期化
         }
     }
     
@@ -130,17 +132,26 @@ struct Home: View {
         if sortCount >= maxSortCount {
             return
         }
-        sample_demo_analytics = sampleAnalytics
         print("🥚🪺🍓")
         // 内部ループの実装
         for sortIndex in 0 ..< maxSortCount - sortCount - 1 {
-            if sample_demo_analytics[sortIndex].views > sample_demo_analytics[sortIndex + 1].views {
+            if sampleDemoAnalytics[sortIndex].views > sampleDemoAnalytics[sortIndex + 1].views {
                 withAnimation(.easeInOut) {
                     print("🍓🍓")
                     // 要素の交換
-                    let temp = sample_demo_analytics[sortIndex]
-                    sample_demo_analytics[sortIndex] = sample_demo_analytics[sortIndex + 1]
-                    sample_demo_analytics[sortIndex + 1] = temp
+                    print("\(sampleDemoAnalytics[sortIndex].views)と\(sampleDemoAnalytics[sortIndex].hour)")
+                    print("\(sampleDemoAnalytics[sortIndex + 1].views)と\(sampleDemoAnalytics[sortIndex+1].hour)")
+                    let tempHour = sampleDemoAnalytics[sortIndex].hour
+                    sampleDemoAnalytics[sortIndex].hour = sampleDemoAnalytics[sortIndex + 1].hour
+                    sampleDemoAnalytics[sortIndex + 1].hour = tempHour
+                    let temp = sampleDemoAnalytics[sortIndex]
+                    sampleDemoAnalytics[sortIndex] = sampleDemoAnalytics[sortIndex + 1]
+                    sampleDemoAnalytics[sortIndex + 1] = temp
+                    print("🪺🪺")
+                    print("\(sampleDemoAnalytics[sortIndex].views)と\(sampleDemoAnalytics[sortIndex].hour)")
+                    print("\(sampleDemoAnalytics[sortIndex + 1].views)と\(sampleDemoAnalytics[sortIndex + 1].hour)")
+                    print("🍓🍓")
+                    
                 }
             }
         }
